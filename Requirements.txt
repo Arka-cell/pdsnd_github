@@ -1,0 +1,28 @@
+Modules required:
+
+import pandas as pd 
+from colorama import init, Fore, Back, Style 
+import requests 
+import sys 
+import os
+from PIL import Image
+import matplotlib.pyplot as plt
+from glob import glob
+import psutil
+from inspect import currentframe, getframeinfo
+from datetime import datetime
+from pandas.plotting import register_matplotlib_converters
+
+Other:
+THANKS FOR YOUR FEEDBACK! I learned well enough from it, and I have put an effort to try and meet your expectation.
+I wanted to do more interesting stuff with tkinter library, unfortunately, I have my studies that are also taking
+my time. Your recommendations were so valuable, and I would like to see more of it.
+Hope to hear from you soon. Thanks again.
+
+
+Sources:
+	https://stackoverflow.com/questions/15644964/python-progress-bar-and-downloads
+	#Source: https://stackoverflow.com/questions/938733/total-memory-used-by-python-process
+	#https://stackoverflow.com/questions/39100971/how-do-i-release-memory-used-by-a-pandas-dataframe
+
+	
