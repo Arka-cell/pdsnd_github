@@ -11,7 +11,6 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from glob import glob
 import psutil
-from inspect import currentframe, getframeinfo
 from datetime import datetime
 from pandas.plotting import register_matplotlib_converters
 
@@ -394,3 +393,4 @@ plt.ylabel('Memory Usage (In Mbs)')
 plt.tight_layout()
 plt.savefig('memory_usage.png')
 plt.show()
+
