@@ -1,17 +1,4 @@
 """
-    What's new about the script? I have resolved the memory usage problem in pandas, with another way,
-    using the del function for pandas dataframe variables. The color blue was made brighter, the user
-    experience suggestion has been fulfilled. Now, all the .csv files are handled automatically, only
-    the first letter should be written correctly for those files. The input 00 had been corrected,
-    using a condition statement of 'len(input_variable) == 1'. I haven't followed the pep8 guide but I
-    have corrected the mistakes you pointed at. The refactoring has been done for the functions.
-    Readibility for file names and variables is now more comprehensible, I avoided ambiguous letters
-    and words. The function main(), which had the purpose to print the first 5 rows is now done. But, the
-    results do skip lines (Not a good user experience in my view). I didn't use the .loc functinon, I used
-    the pandas.head() function, which is set to 5 rows by default.
-"""
-
-"""
     Importing our required libraries.
 """
 
@@ -106,9 +93,7 @@ def popular_time(x,z,y):
             common_time = file_csv['Hour'].mode()[0]
             print(Fore.BLUE + '\nThe most common hour is: ',str(hour_mapper_24[common_time]))
     """
-    I'll be using del function for garbage collection, since that loading any file was leading memory from around 60Mbs to 100Mbs.
-    The program will continue around that number until it is closed. Now, with the del function, it is going back around 60Mbs.
-    I've read that garbage collection is tricky to do, it would help me to get cleared about that
+    We'll call the del function to collect garbage and release it.
     """
     del file_csv
     memory_usage()
@@ -131,25 +116,19 @@ def stations(x,y):
     memory_usage()
 
 def travel(x,y):
-    #I have used below the parse_dates as you have suggested, saving two lines of code by omitting to_datetime
     file_csv = pd.read_csv(str(raw_files[x]),parse_dates=['Start Time','End Time'])
     memory_usage()
-    #file_csv['End Time'] = pd.to_datetime(file_csv['End Time'])
     file_csv['Travel Time'] = file_csv['End Time'] - file_csv['Start Time']
     if (y == '1'):
         tot_trv_time = str((file_csv['Travel Time']).sum())
-        #tot_trv_time = str(tot_trv_time) This code was reduced
         print(Fore.BLUE + '\nThe Total Travel Time is',str(tot_trv_time))
     elif (y == '2'):
         avg_trv_time = str((file_csv['Travel Time']).mean())[:15]
-        #avg_trv_time = str(avg_trv_time)[:15] This code was reduced
-        #avg_trv_time = avg_trv_time[:15] This code was reduced
         print(Fore.BLUE + '\nThe Average Travel Time is',str(avg_trv_time))
     del file_csv
     memory_usage()
 
 def user_info(x, y, z):
-    #x is the city, y is the subquestion.
     file_csv = pd.read_csv(str(raw_files[x]))
     if (y == str(1)):
         count = file_csv.groupby(['User Type'])['User Type'].count()
@@ -174,36 +153,22 @@ def user_info(x, y, z):
 """
     Assigning our variables, lists, dictionaries
 """
+memory_statistcs = [] 
+time_statistics = [] 
 
-"""comment:
-memory_statistcs will represent a list of memory usage, whereas, time_statistics will represent a list of time events. They will be both represented in
-as 'x' and 'y' axis.
-"""
-memory_statistcs = [] #Thus is the list that is going to be written as the y axis in matplotlib. Representing memory usage.
-time_statistics = [] #This is the list that is going to be written as the x axis in matplotlib. Representing timeseries
 
-"""
-    The os.path.realpath function is detecting the script path, len(os.path.basenmae) function is detecting the length of the script name.
-    We are going to delete through slicing, the script path, using the length of the script name.
-"""
-#The variables below are directories whereas they are assigned to current_script_path[length of the path - length of the name of the file] to get the folder directory.
 working_dir = (os.path.realpath(__file__))[:(len((os.path.realpath(__file__))) - (len(os.path.basename(__file__))))]
-#We will create a dictionnary, I am using glob instead of os module, I have found that glob has a built-in function. Still, should I avoid using too much
-#libraries in my code? I imported the glob function only from glob
-#Another advantage of glob is that it will look for files with .csv extension. You can see that the SPLAT symbol refeers to take all the files with desired extension
 csv_files_dir = (glob(working_dir+"\\*.csv"))
 raw_files = {}
 i = 1
-#We are going to get all of our csv files in the current path, and add them to a dictionnary, this is about refactoring and not repeating code
+
 for element in csv_files_dir:
-    #We have used the keys as strings, because, the user input will also be in string such as 'B' for Back or 'Q' for Quit.
     raw_files[str(i)] = element
     i = i + 1
 
 #The start variable will initialize the script, if we have to quit, we just turn it into False. It is the same thing for download_is_starting
 start = True
 download_is_starting = True
-#Making time mapppers to add more interactivity for our first question
 months_mapper = {
                 1:'January', 2:'February',3:'March',4:'April',5:'May',6:'June',
                 7:'July',8:'August',9:'September',10:'October',11:'November',
@@ -227,11 +192,10 @@ hour_mapper_24 = {
                 12:'12:00',13:'13:00',14:'14:00',15:'15:00',16:'16:00',17:'17:00',
                 18:'18:00',19:'19:00',20.:'20:00',21:'21:00',22:'22:00',23:'23:00'
                 }
-#Making a list of cities to call as strings for better interactivity
 cities = 'Chicago', 'New York City', 'Washington, D.C'
 
 """
-    Now, our script will be starting:
+    Initializing our script.
 """
 print(Fore.GREEN + Style.BRIGHT +'\nHi! And welcome. This script will answer and give specific statistics that were asked in the US Bikeshare Project.\n')
 
@@ -242,11 +206,6 @@ while (download_is_starting == True):
         try:
             file_url = 'https://i.imgur.com/XZTkBix.jpg'
             file_name = 'Project Guide as Image.jpg'
-            """
-                Here is the link from which I got the code, I analyzed the code, and replaced the '=' progress with percentage progress.
-                Using percentage as a figure for download is more user-friendly.
-                https://stackoverflow.com/questions/15644964/python-progress-bar-and-downloads
-            """
             with open(file_name, "wb") as f:
                 print ("Downloading "+file_name+"... please, wait for download progress\n")
                 response = requests.get(file_url, stream=True)
@@ -270,7 +229,6 @@ while (download_is_starting == True):
                     print(' - Download Failed.')
             im = Image.open('Project Guide as Image.jpg')
             im.show()
-            #We have put download = str(2).
             download = str(2)
             download_is_starting = False
         except:
@@ -289,13 +247,12 @@ while (download_is_starting == True):
 while(start == True):
     print(Fore.WHITE + Style.BRIGHT+'\nDo you want to see a sample of the raw data?\n')
     main(input('\nPress 1 if Yes.\nPress 2 if no.\nEnter here: '), True)
-    memory_usage() #The function will get the memory usage into a list that will be printed in matplot at the end.
+    memory_usage()
 
     if(download ==str (2) or download == str(1)):
-        #start will initialize our code, as long as start is True, our script will be running.
         start = True
         print(Fore.WHITE+'\nYou can find different analytical questions from this script. Have fun!\n')
-        #As long as start is True our loop will be running, switching it to off would mean that we have instructed the program to quit
+   
         while (start == True):
             print(Fore.WHITE+'\n   Choose one of the following options:\n\nPress 1 to get the most popular travel times.\nPress 2 to get the most common stations and trips.\nPress 3 to get the total and the average time of trips.\nPress 4 to get the total of each user type, gender, and information about age.\nTo quit press Q.\n')
             answer = (input('Type your choice here: ')).title()
@@ -429,8 +386,7 @@ memory_usage()
 print(Fore.GREEN+'\nThank you for your review! I hope that the code had met your expectations.')
 
 """
-Time statistics and memory statistics are represented in matplotlib below, it is also an
-opportunity to show my understanding about the library which is very relevant in data science
+Time statistics and memory statistics are represented in matplotlib.
 """
 plt.plot(time_statistics,memory_statistcs)
 plt.xlabel('Time (In mm-ss)')
@@ -438,11 +394,3 @@ plt.ylabel('Memory Usage (In Mbs)')
 plt.tight_layout()
 plt.savefig('memory_usage.png')
 plt.show()
-
-"""
-We can also use a saveimage function for matplotlib, I did to compare between the results. But also because,
-in matplotlib, you have to close out your visualization in order for the script to stop.
-"""
-
-#statistic_plt = Image.open('memory_usage.png')
-#statistic_plt.show()
